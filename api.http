@@ -1,0 +1,68 @@
+POST http://127.0.0.1:3333/training
+Content-Type: application/json
+
+{
+  "name": "Treino de Peito CBUM",
+  "type": "chest",
+  "duration": 600,
+  "exercises": [
+    {
+      "name": "CrossOver",
+      "reps": 4,
+      "calories": 200,
+      "videoUrl": "https://youtu.be/o90Pm6qTeNI"
+    },
+    {
+      "name": "Supino Reto",
+      "reps": 5,
+      "calories": 250,
+      "videoUrl": "https://youtu.be/o90Pm6qTeNI"
+    },
+    {
+      "name": "Flexão de Braço",
+      "reps": 3,
+      "calories": 150,
+     "videoUrl": "https://youtu.be/o90Pm6qTeNI"
+    }
+  ]
+}
+
+###
+
+POST http://127.0.0.1:3333/user
+Content-Type: application/json
+
+{
+    "name": "Lionel Messe",
+    "email": "leomessi@fcb.com",
+    "password": "messi123"
+    
+}
+
+###
+
+POST http://127.0.0.1:3333/training/23e330ba-06ff-44df-813b-b4fcae4482d1/add/2
+Content-Type: application/json
+
+{
+    
+}
+
+###
+
+GET http://127.0.0.1:3333/training/23e330ba-06ff-44df-813b-b4fcae4482d1
+
+
+###
+
+GET http://127.0.0.1:3333/users/2/trainings
+
+###
+
+GET http://127.0.0.1:3333/attendees/3/badge
+
+###
+
+GET http://127.0.0.1:3333/attendees/1/check-in
+
+
