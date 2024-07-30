@@ -1,10 +1,8 @@
-import { PrismaClient } from "@prisma/client";
 import { ZodTypeProvider } from "fastify-type-provider-zod";
-import { generateSlug } from "../utils/generate-slug";
 import { z } from "zod";
 import { prisma } from "../lib/prisma";
 import { FastifyInstance } from "fastify";
-import bcrypt from 'bcryptjs';
+import bcrypt from "bcryptjs";
 import { BadRequest } from "./_errors/bad-request";
 
 export async function createUser(app: FastifyInstance) {
@@ -14,38 +12,44 @@ export async function createUser(app: FastifyInstance) {
       schema: {
         body: z.object({
           name: z.string().min(4),
+          identity: z.string().min(11).max(11),
           email: z.string().email(),
-          password:z.string().min(8).max(32)
+          password: z.string().min(8).max(32),
         }),
-        response: {
-          
-        },
+        response: {},
       },
     },
     async (req, reply) => {
-        const { name, email, password } = req.body;
-  
-        const userWithSameEmail = await prisma.user.findUnique({
-          where: {
-            email,
-          },
-        });
-  
-        if (userWithSameEmail !== null) {
-          throw new BadRequest("E-mail already registered!");
-        }
-  
-        const passwordHash = await bcrypt.hash(password, 10);
-  
-        const user = await prisma.user.create({
-          data: {
-            name,
-            email,
-            passwordHash,
-          },
-        });
-  
-        return reply.status(201).send({ userId: user.id });
+      const { name, email, password, identity } = req.body;
+
+      const userWithSameEmail = await prisma.user.findUnique({
+        where: { email },
+      });
+      if (userWithSameEmail) {
+        throw new BadRequest("E-mail already registered!");
       }
+
+      const userWithSameCPF = await prisma.user.findUnique({
+        where: { identity },
+      });
+      if (userWithSameCPF) {
+        throw new BadRequest("CPF already registered!");
+      }
+
+      // Hash da senha
+      const passwordHash = await bcrypt.hash(password, 10);
+
+      // Criação do usuário
+      const user = await prisma.user.create({
+        data: {
+          name,
+          identity,
+          email,
+          passwordHash,
+        },
+      });
+
+      return reply.status(201).send({ userId: user.id });
+    }
   );
 }

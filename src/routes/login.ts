@@ -1,10 +1,8 @@
-import { PrismaClient } from "@prisma/client";
 import { ZodTypeProvider } from "fastify-type-provider-zod";
-import { generateSlug } from "../utils/generate-slug";
 import { z } from "zod";
 import { prisma } from "../lib/prisma";
 import bcrypt from "bcryptjs";
-import { jwt } from "jsonwebtoken";
+import * as jwt from "jsonwebtoken";
 import { FastifyInstance } from "fastify";
 import { BadRequest } from "./_errors/bad-request";
 
@@ -13,9 +11,9 @@ export async function login(app: FastifyInstance) {
     "/login",
     {
       schema: {
-        params: z.object({
+        body: z.object({
           email: z.string().email(),
-          password: z.string(), 
+          password: z.string(),
         }),
         response: {
           201: z.object({
